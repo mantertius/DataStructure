@@ -46,7 +46,7 @@ void printLinkedList(Node *head)
     return;  
 }
 
-Node* search(Node *head, int item)
+Node* search(Node *head, int item) //retorna o nó do item
 {
     while (head != NULL)
     {
@@ -61,13 +61,21 @@ Node* search(Node *head, int item)
 
 Node* removeNode(Node *head, int item)
 {   
-    Node* itemplace = search(head,item);
-    /*int* x;//cria ponteiro para int 
-    *x;//pega o valor do ponteiro para int */
-    
+    Node* itemplace = search(head,item); //aqui eu encontro em qual nó está o item
+
+    if(itemplace == NULL)
+    {
+        printf("This item is not stored on the list.");   
+        return head;
+    }
+    else
+    {
+     //TODO #1 criar um struct pra me dar o previous e o current;   
+    }
 
 
-}
+    free(itemplace);
+    return NULL;
 
 
 
@@ -91,4 +99,5 @@ int main()
     int isEmpty (Node *head ); 
     search(Node *head , int item ); 
     removeNode( Node *head , int item ); */
+    return 0;
 }

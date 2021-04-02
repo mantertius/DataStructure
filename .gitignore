@@ -144,6 +144,8 @@ dkms.conf
 
 ### MicrosoftOffice ###
 *.tmp
+*.in
+*.out
 
 # Word temporary
 ~$*.doc*
