@@ -76,24 +76,11 @@ Node* removeNode(Node *head, int item)
 
     free(itemplace);
     return NULL;
-
-
-
-
-
-
-
-Node* search(Node *head, int item) ; 
-Node* removeNode( Node *head, int item) ; 
-
-
-
+}     
 int main()
 {   
 
     Node* lista1 = createLinkedList();
-
-
    /* insertNode(Node *head , int item ); 
     void printLinkedList( Node *head ); 
     int isEmpty (Node *head ); 

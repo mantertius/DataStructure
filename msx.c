@@ -18,8 +18,6 @@ void get_string()
     char end[] = "the end!";
     char end2[] = "the end! ";
     char end3[] = "the end!\n";
-
-
     void* p = fgets(a,75,stdin);
     //printf("tamanho do string:[%ld]\n",strlen(a));
     //printf("INPUT: %s",a);
@@ -28,16 +26,13 @@ void get_string()
     int ret3 = strcmp(a,end3);
 
     //printf("resultado strncmp:[%d]\t",ret);
-
     if(ret == 0 || ret2 == 0 || p == NULL || ret3 == 0)
     {
         //printf("\n");
         return;
     }
-    
     int size = strlen(a);
     //printf("SIZE: %d\t",size);
-
         int i=0;
         while (i<size)
         {
@@ -45,10 +40,8 @@ void get_string()
             c = a[i];
             printf("%c",toupper(c));
             i++;
-        }
-        
+        }  
         //printf("\n");
-    
     return get_string();
 }
 int main()
