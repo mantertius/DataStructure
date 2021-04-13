@@ -16,6 +16,7 @@ float func(int x)
 
 float tvi(float (*f)(int), int a, int b)
 {   
+    int MAX_N = 1486618625;
     float TOL = 0.000000058;
     int t1 = (*f)(a);
     int t2 = (*f)(b);
@@ -25,7 +26,11 @@ float tvi(float (*f)(int), int a, int b)
     {
         if (mid = 0 || (b-a)/2 < TOL)
         {
+            if(mid == 0)printf("mid = 0\n");
+            if((b-a)/2 < TOL)printf("TOL\n");
+
             printf("ENCONTREI!");
+            printf("%.2f\n",mid);
             return mid;
         }
         if ((*f)(a)>0 && (*f)(b)>0 ||(*f)(a)<0 && (*f)(b)<0) //cria novo intervalo
@@ -37,7 +42,10 @@ float tvi(float (*f)(int), int a, int b)
     }
 
 } 
-
+int main()
+{
+    tvi(func,0.555, 5);
+}
 // N ← 1
 // while N ≤ NMAX do // limit iterations to prevent infinite loop
 //     c ← (a + b)/2 // new midpoint
