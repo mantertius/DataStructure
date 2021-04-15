@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define debug if(1)
-
+#define debug if(0)
 typedef struct node{
     char a;
     int freq;
@@ -33,6 +32,7 @@ void printer(node* head)
         head = head->next;
     }
 }
+
 node* search(node* head, char data)
 {
     while (head != NULL)
@@ -48,46 +48,48 @@ node* search(node* head, char data)
 
 int main()
 {
-    char str[1000];
+    char str[1000]; //input
     int i = 0;
     fgets(str,1000,stdin);
-    int max = strlen(str);
+    int max = strlen(str); //tamanho da string input
     char* pch;
     int freq;
+    
     node* lista = init();
 
-    int ch[256]; //index == ascii, value == freq
-
-    for (int i = 0; i < max  ; i++)
+    int ch[256] = {0}; //index == ascii, value == freq
+    
+    for (int i = 0; i < 256 ; i++)
     {   
         freq = 0;
-        char tmp = str[i];
+        char tmp = i; //str[i] = 'a' 
         for (int j = 0; j < max; j++)
         {
+
             if (tmp == str[j])
             {
                 freq++;
             }
-        }
-        debug printf("[%c] [%d]\n",str[i],freq);
-        if (ch[(int)str[i]] == 0) //adds frequency values to the correspondent ascii index 
-        {
-            //TODO #3 it's not computing the char ' ' or ',' or '.'
-            ch[(int)str[i]] = freq;
-            debug printf("\t\tch[%d] = %d\n",(int)str[i],ch[(int)str[i]]);
-        }
-                
+        }// 
+        ch[i] = freq;
+        debug printf("[%c] [%d]\n",(char)i,freq);
+        // if (ch[(int)str[i]] == 0) //adds frequency values to the correspondent ascii index 
+        // {
+        //     //TODO #3 it's not computing the char ' ' or ',' or '.'
+        //     ch[(int)str[i]] = freq;
+        //     debug printf("\t\tch[%d] = %d\n",(int)str[i],ch[(int)str[i]]);
+        // } 
     }
     
-    for (int aux = 0; aux < max ; aux++)
+    for (int aux = 0; aux < 256 ; aux++)
     {
-        if (ch[str[aux]] != 0)
+         
+        if (ch[aux] > 0)
         {
-           lista = add(lista,(char)aux,freq);
+            lista = add(lista,(char)aux,ch[aux]);
         }
             
     }
     printer(lista);
     return 0;
 }
-//TODO #2 criar uma maneira de ordenar a saida na ordem anti-alfabética
