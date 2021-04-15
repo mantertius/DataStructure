@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define debug if(0)
+#define debug if(1)
 
 typedef struct node{
     char a;
@@ -25,7 +25,7 @@ node* add(node* head, char item, int freq)
     return new_node;
 }
 
-void printer(node*head)
+void printer(node* head)
 {
     while (head != NULL)
     {
@@ -45,6 +45,7 @@ node* search(node* head, char data)
     }
     return NULL;
 }
+
 int main()
 {
     char str[1000];
@@ -54,6 +55,9 @@ int main()
     char* pch;
     int freq;
     node* lista = init();
+
+    int ch[256]; //index == ascii, value == freq
+
     for (int i = 0; i < max  ; i++)
     {   
         freq = 0;
@@ -66,10 +70,22 @@ int main()
             }
         }
         debug printf("[%c] [%d]\n",str[i],freq);
-        if (search(lista,tmp) == NULL)
+        if (ch[(int)str[i]] == 0) //adds frequency values to the correspondent ascii index 
         {
-            lista = add(lista,tmp,freq);
-        }        
+            //TODO #3 it's not computing the char ' ' or ',' or '.'
+            ch[(int)str[i]] = freq;
+            debug printf("\t\tch[%d] = %d\n",(int)str[i],ch[(int)str[i]]);
+        }
+                
+    }
+    
+    for (int aux = 0; aux < max ; aux++)
+    {
+        if (ch[str[aux]] != 0)
+        {
+           lista = add(lista,(char)aux,freq);
+        }
+            
     }
     printer(lista);
     return 0;
