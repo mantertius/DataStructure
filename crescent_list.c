@@ -27,7 +27,7 @@ int is_empty(NODE *head)
 {
     return (head == NULL);
 }
-NODE* bubbleSort(NODE* head, int num)
+NODE* bubbleSort(NODE* head)
 {
     NODE* pos;
     NODE* tmp = NULL;
@@ -43,12 +43,6 @@ NODE* bubbleSort(NODE* head, int num)
         DEBUG printf("COMEÇAAAAAAAAAAAAA\n");
         swap = 0;
         pos = head;
-        
-        // if (pos->next == NULL)
-        // {
-        //     printf("FIM\n");
-        //     continue;
-        // }
         DEBUG printf("o proximo nao é nulo\n");
 
         while(pos->next != tmp)
@@ -100,8 +94,7 @@ int main()
         DEBUG printf("Elemento %d adicionado\n",n);
         i++;
     }
-    order(lista, i);
-    //bubbleSort(lista);
+    bubbleSort(lista);
     printer(lista);
     return 0;
 }

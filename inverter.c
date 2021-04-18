@@ -62,8 +62,7 @@ Node* getLastNode(Node* node)
     {
         return getLastNode(node->next);
     } 
-}
-
+}   
 int main()
 {
     int n;

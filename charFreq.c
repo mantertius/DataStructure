@@ -70,15 +70,9 @@ int main()
             {
                 freq++;
             }
-        }// 
+        }
         ch[i] = freq;
         debug printf("[%c] [%d]\n",(char)i,freq);
-        // if (ch[(int)str[i]] == 0) //adds frequency values to the correspondent ascii index 
-        // {
-        //     //TODO #3 it's not computing the char ' ' or ',' or '.'
-        //     ch[(int)str[i]] = freq;
-        //     debug printf("\t\tch[%d] = %d\n",(int)str[i],ch[(int)str[i]]);
-        // } 
     }
     
     for (int aux = 0; aux < 256 ; aux++)
