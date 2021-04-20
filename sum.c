@@ -70,8 +70,6 @@ void calculate(STACK* a, STACK* b, STACK* res)
         int right = pos2->data;
         int previous = 0;
 
-        
-
         if (res->top != NULL) previous =  res->top->data;
         int ans = left+right+previous;
         

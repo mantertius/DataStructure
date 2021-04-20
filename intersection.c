@@ -13,7 +13,6 @@ typedef struct head
 {
     int size;
     NODE* head;
-    NODE* tail;
 }LIST;
 
 LIST* init_list()
@@ -70,7 +69,8 @@ bool search(LIST* list, int target)
         if(tmp->data == target)
         {
             return true;
-        }   
+        }
+        tmp = tmp->next;   
     }
     return false;
 }
@@ -82,29 +82,15 @@ bool comparator(int* a, int* b, LIST* list) //gets two arrays and adds to the li
     int tmp;
     int t = 0;
     int last = 468468486;
-    DEBUG printf("OI\n");
     for (int i = 0; i < count; i++)
     {
         tmp = a[i];
-        //DEBUG printf("###### a[%d] = %d #######\n",i, a[i]);
         for (int j = 0; j < count; j++)
         {
-            //DEBUG printf("tmp = %d e b[%d] = %d\n", tmp, j, b[j]);
+            DEBUG printf("OI [%d]\n", j);
             if (tmp == b[j])
             {  
-                //DEBUG printf("Elemento [%d] adicionado.\n", tmp);
-               /* if (search(list, tmp))
-                {
-                    continue;
-                }
-                add(list, tmp);
-                 
-                */
-                if (tmp == last)
-                {
-                    continue;
-                }
-                
+                if (tmp == last) continue;
                 if(i != 0 && tmp == last) continue;
                 sort[t] = tmp;
                 last = tmp;
@@ -113,20 +99,19 @@ bool comparator(int* a, int* b, LIST* list) //gets two arrays and adds to the li
             }
         } 
     }
-
-    //qsort(sort,t,sizeof(int), compar);
+    DEBUG printf("XAU\n");
+    if (flag == 0) return false;
     for (int i = 0; i < t; i++)
     {
+        tmp = sort[i];
+        DEBUG printf("tMP = [%d]\n", tmp);
+        if (search(list, tmp) && i != 0)
+        {
+            continue;
+        }
         add(list,sort[i]);
     }
-    
-    if (flag > 0)
-    {
-        return true;
-    }
-    return false;
-    
-        
+    return true;    
 }
 void printer(LIST* head)
 {
@@ -148,15 +133,20 @@ int main()
     for (int i = 0; i < count; i++)
     {   
         scanf("%d",&n);
-        a[i] = n; 
+        a[i] = n;
+        DEBUG printf("a[%d] = %d\n",i,n); 
     }
     for (int i = 0; i < count; i++)
     {
         scanf("%d",&n);
-        b[i] = n; 
+        b[i] = n;
+        DEBUG printf("b[%d] = %d\n",i,n); 
     }
+    DEBUG printf("CADE CADE VAI PRO COMPARADOR OU NAO\n");
     n = comparator(a,b,head);
+    if(!n) {printf("VAZIO\n");return 0;} 
     bubbleSort(head);
     if (n) printer(head);
-    else printf("VAZIO\n");
+    else 
+    return 0;
 }
