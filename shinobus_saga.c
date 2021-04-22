@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#define DEBUG if(1)
 //Armazena o primeiro item da fila
 typedef struct _stack STACK;
 
@@ -33,6 +33,7 @@ NODE* create_node(int element)
     NODE* new_node = (NODE*) malloc(sizeof(NODE));
     new_node->element = element;
     new_node->next = NULL;
+    return new_node;
 }
 
 //Verifica se a pilha esta vazia
@@ -55,6 +56,7 @@ int POP(STACK* stack)
 //Adiciona um novo node no topo da pilha
 void PUSH(STACK* stack, int element)
 {
+    DEBUG printf("----Elemento %d adicionado-----\n",element);
     NODE* tmp = create_node(element);
     tmp->next = stack->head;
     tmp->element = element;
@@ -63,18 +65,79 @@ void PUSH(STACK* stack, int element)
 
 //Recebe a pilha e a operacao a ser feita
 //faz a operacao da calculadora
-void result(STACK* stack, char operation);
+void result(STACK* stack, char operation)
+{
+    int a,b,ans;
+    a = POP(stack);
+    b = POP(stack);
+
+    switch (operation)
+        {
+        case '+':
+            ans = a+b;
+            PUSH(stack,ans);
+            break;
+        
+        case '-':
+            ans = b-a;
+            PUSH(stack,ans);
+            break;
+        
+        case '*':
+            ans = a*b;
+            PUSH(stack,ans);
+            break;
+        
+        case '/':
+            ans = b/a;
+            PUSH(stack,ans);
+            break;
+        default:
+            DEBUG printf("Operação Inválida!\n");
+            break;
+        }
+}
 
 //Recebe uma pilha vazia e quantas strings serao lidas
 //Le as n strings que vao seguir e resolve as expressoes
 void Calculadora(STACK* calculadora, int size)
 {
     char c[size];
-    for (int i = 0; i < ; i++)
+    char flusher;
+    for (int i = 0; i < size ; i++)
     {
-        /* code */
+        scanf(" %c",&c[i]);
+        DEBUG printf("[%c] i= [%d]\t", (int)c[i], i);
+        if(c[i] == '\n'){--i;continue;}
+        switch (c[i])
+        {
+        case '+':
+            result(calculadora,'+');
+            DEBUG printf("\n");
+            break;
+        
+        case '-':
+            result(calculadora,c[i]);
+            DEBUG printf("\n");
+            break;
+        
+        case '*':
+            result(calculadora,c[i]);
+            DEBUG printf("\n");
+            break;
+        
+        case '/':
+            result(calculadora,c[i]);
+            DEBUG printf("\n");
+            break;
+        
+        default:
+            PUSH(calculadora,c[i] - '0');
+            break;
+        }
+        
     }
-    
+   DEBUG printf("\n"); 
 }
 
 int main()
