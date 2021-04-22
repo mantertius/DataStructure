@@ -106,6 +106,7 @@ void Calculadora(STACK* calculadora, int size)
     char flusher;
     for (int i = 0; i < size ; i++)
     {
+        //TODO #4 must treat multiple digits input
         scanf(" %c",&c[i]);
         DEBUG printf("[%c] i= [%d]\t", (int)c[i], i);
         if(c[i] == '\n'){--i;continue;}
@@ -132,7 +133,9 @@ void Calculadora(STACK* calculadora, int size)
             break;
         
         default:
-            PUSH(calculadora,c[i] - '0');
+        //PRECISO VER SE ISSO DAQUI TA FUNCIONANDO
+            atoi(c);
+            PUSH(calculadora,c[i]);
             break;
         }
         
