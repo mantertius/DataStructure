@@ -56,7 +56,6 @@ int POP(STACK* stack)
 //Adiciona um novo node no topo da pilha
 void PUSH(STACK* stack, int element)
 {
-    DEBUG printf("----Elemento %d adicionado-----\n",element);
     NODE* tmp = create_node(element);
     tmp->next = stack->head;
     tmp->element = element;
@@ -93,7 +92,6 @@ void result(STACK* stack, char operation)
             PUSH(stack,ans);
             break;
         default:
-            DEBUG printf("Operação Inválida!\n");
             break;
         }
 }
@@ -103,44 +101,39 @@ void result(STACK* stack, char operation)
 void Calculadora(STACK* calculadora, int size)
 {
     char c[size];
-    char flusher;
+    int t;
     for (int i = 0; i < size ; i++)
     {
-        //TODO #4 must treat multiple digits input
-        scanf(" %c",&c[i]);
-        DEBUG printf("[%c] i= [%d]\t", (int)c[i], i);
+        //TODO must treat multiple digits
+        scanf("%s",c);
         if(c[i] == '\n'){--i;continue;}
-        switch (c[i])
+        switch (c[0])
         {
         case '+':
             result(calculadora,'+');
-            DEBUG printf("\n");
             break;
         
         case '-':
-            result(calculadora,c[i]);
-            DEBUG printf("\n");
+            result(calculadora,'-');
+
             break;
         
         case '*':
-            result(calculadora,c[i]);
-            DEBUG printf("\n");
+            result(calculadora,'*');
+
             break;
         
         case '/':
-            result(calculadora,c[i]);
-            DEBUG printf("\n");
+            result(calculadora,'/');
             break;
         
         default:
-        //PRECISO VER SE ISSO DAQUI TA FUNCIONANDO
-            atoi(c);
-            PUSH(calculadora,c[i]);
+            t = atoi(c);
+            PUSH(calculadora,t);
             break;
         }
         
     }
-   DEBUG printf("\n"); 
 }
 
 int main()
