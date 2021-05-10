@@ -5,10 +5,14 @@
 #include <time.h>
 
 int main() {
-    srand(time(NULL));
-    for (int i = 0; i < 30; i++)
+    char c[50];
+    int d; 
+    scanf("%s",c);
+    int len = strlen(c);
+    for (int i = 0; i < len; i++)
     {
-        printf("%d ",rand()%1000);
+        d = atoi(c) - 65;
     }
+    printf("%d",d);
 	return 0;
 }
