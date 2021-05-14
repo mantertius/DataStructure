@@ -6,38 +6,59 @@
 typedef struct Node
 {
     int data;
-    struct _Node* left;
-    struct _Node* right;
-}Node;
-typedef struct _binaryTree
-{
-    int height;
-    Node* root;
+    struct Node* left;
+    struct Node* right;
 }binaryTree;
 
 binaryTree* iniT()
 {
-    binaryTree* newTree = (binaryTree*) malloc(sizeof(binaryTree));
-    newTree->height = 0;
-    newTree->root = NULL;
-    return newTree;
+    return NULL;
 }
-void left(int value)
+binaryTree* createBinTree(int item, binaryTree* left, binaryTree* right)
 {
-
+    binaryTree* new = (binaryTree*) malloc(sizeof(binaryTree));
+    new->data = item;
+    new->left = left;
+    new->right = right;
+    return new;
 }
-void right(int value)
+binaryTree* add(int item, binaryTree* bt)
 {
-
-}
-void add(int value, binaryTree* rootz)
-{
-    if (rootz->height == 0)
+    if (bt == NULL)
     {
-        addRoot(value,rootz);
+        bt = createBinTree(item,NULL,NULL);
+    }
+    else if (item < bt->data) //11>2
+    {
+        bt->left = add(item, bt->left);
+    }
+    else 
+    {
+        bt->right = add(item, bt->right);
+    }
+    return bt;
+}
+int isEmpty(binaryTree* bt)
+{
+    return (bt == NULL);
+}
+void preOrder(binaryTree* bt)
+{
+    if (!(isEmpty(bt)))
+    {
+        printf(" ( %d ",bt->data);
+        preOrder(bt->left);
+        preOrder(bt->right);
+        //printf(") ");
+        printf(") ");
+
+    }
+    else
+    {
+        printf(" () ");
     }
     
-    rootz->height++;
+    
 }
 int main()
 {
@@ -46,9 +67,11 @@ int main()
     while (scanf("%d",&n) != EOF)
     {
         printf("----\nAdicionando %d\n",n);
-        add(n,bT);
-        printTree();
-
-    }   
+        bT = add(n,bT);
+        printf("  ");
+        preOrder(bT);
+        printf("\n");
+    }
+    printf("----\n");   
     return 0;
 }
