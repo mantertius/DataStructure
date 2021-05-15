@@ -90,9 +90,10 @@ int main()
     int inputTree[len];
    
     //gets only the inputTree from the input
+    //creates a auxiliary ptr to transverse the string
     char *ptr = input;
     while (*ptr) { 
-        if (isdigit(*ptr)) { 
+        if (isdigit(*ptr)) { //if string + x is digit 
             long val = strtol(ptr, &ptr, 10); 
             DEBUG printf("%ld\n", val);
             inputTree[numOfValues] = val;
