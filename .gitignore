@@ -170,5 +170,6 @@ Backup of *.doc*
 /livro_v1
 /main
 /projetosp1/.vscode/
+exemplo.c
 
 # End of https://www.toptal.com/developers/gitignore/api/c,images,microsoftoffice,audio,adobe

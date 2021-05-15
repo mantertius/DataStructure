@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
+//https://thehuxley.com/problem/783?quizId=6236
 typedef struct Node
 {
     int data;
