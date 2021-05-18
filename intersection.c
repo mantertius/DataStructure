@@ -37,12 +37,12 @@ void add(LIST* list, int data)
 }
 void bubbleSort(LIST* list)
 {
-    NODE* pos; //set the position to head.
+    NODE* pos; //auxiliary node* that points to head
     NODE* tmp = NULL;
     int flag = 0; //flag will switch to 1 while it's making swaps
     do
     {
-        pos = list->head;
+        pos = list->head;//set the position to head.
         flag = 0;
 
         while (pos->next != tmp)
