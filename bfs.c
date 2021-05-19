@@ -135,8 +135,11 @@ void theWay(graph* g,int distToSource[], int lasts[],int origin, int destination
     int buffer[distToSource[destination]];
     //printf("[[%d]]\n",distToSource[destination]);
     int i = 0;
+
     while (pass != origin)
     {
+        DEBUG printf("ORIGEM: [%d]\t",origin);
+        DEBUG printf("ultimo de [%d] = [%d]\n",i,lasts[i]);
         buffer[i] = lasts[pass];
         pass = lasts[pass];
         i++;
@@ -155,8 +158,7 @@ void bfs(graph* graph,int origin, int destination, int count)
     {
         graph->visited[i] = 0;
     }
-
-    int verticesNum = count;
+    int verticesNum = count; count = 0;
     adj_list*  tmp = graph->vertices[origin];  
     Queue* queue = initQ(); 
     int dequeued;
@@ -168,7 +170,6 @@ void bfs(graph* graph,int origin, int destination, int count)
         distToSource[origin] = 0;
     int lasts[MAX_SIZE]; //vai guardar qual o pai do index... se 3 é pai de 2, lasts[2] = 3
     int found = 0;
-    count = 0;
     while (!isEmptyQ(queue))
     {
         dequeued = deQueue(queue); //dequeued é o numero que vai ser visitado, 
@@ -182,19 +183,25 @@ void bfs(graph* graph,int origin, int destination, int count)
                 enQueue(queue,tmp->item);
                 lasts[tmp->item] = dequeued;
                 distToSource[tmp->item] = distToSource[dequeued]+1;
-                //DEBUG printQ(queue,graph);
+                DEBUG printQ(queue,graph);
+                DEBUG printf("ultimo de [%d] = [%d]\n",count,lasts[count]);
             }
             else
             {
                 tmp = tmp->next;
+                DEBUG printf("FINIS ___ ultimo de [%d] = [%d]\n",count,lasts[count]);
                 continue;
             }
             printf("Iniciando busca em largura a partir de %d\n",tmp->item);
-            if(found == 0){ lasts[count] = tmp->item; count++;}
+            if(found == 0)
+            { 
+                DEBUG printf("\t count++\n");
+                count++;
+            }
             if(tmp->item == destination)
             {
                 found = 1;
-                //DEBUG printf("encontrado [%d]!", found);
+                DEBUG printf("encontrado [%d]!\t", found);
                 //DEBUG printf("ENCONTRADO depois de %d passagens, ultimo foi [%d]\n",count,lasts[count-1]);
                 //break;
             }
@@ -204,6 +211,11 @@ void bfs(graph* graph,int origin, int destination, int count)
 
     }
     //node_explanation(graph);
+    DEBUG for (int i = 0; i < count; i++)
+    {
+        printf("LAST[%d] = [[%d]]\n",i,lasts[i]);
+    }
+    
     printf("\n");
     for (int i = 0; i < verticesNum; i++)
     {
