@@ -70,10 +70,14 @@ bool addHashed(table* ht, int value, int key)
 {
     return addListHead(ht->tables[key],value);
 }
-bool ADD(table* S, int K)
+bool ADD(table* S, int K, int key
+)
 {
-    return true;
-}
+    if (!HAS(S,K))
+    {
+        addHashed(S,K,)
+        return true;
+    }
 bool DEL(table* S, int K)//remove
 {
     return true;
@@ -81,13 +85,14 @@ bool DEL(table* S, int K)//remove
 bool HAS(table* S, int K)//percente
 {
     int key = hashFunction(K,S->base);
+    node* tmp = S->tables[key]->head; 
     while (S->tables[key] != NULL)
     {
-        
+        if(tmp->data == K)return true;
+        tmp = tmp->next;
+    
     }
-    
-    
-    return true;
+    return false;
 }
 int AtoI(char input[]) //returns an int from a string
 {
