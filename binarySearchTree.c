@@ -1,4 +1,4 @@
-//https://thehuxley.com/problem/546?quizId=6236
+//https://thehuxley.com/problem/547?quizId=6236
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
