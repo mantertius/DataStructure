@@ -1,6 +1,7 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
+ //https://thehuxley.com/problem/949/oracle?quizId=6236
  /*
 6
 10 2 1
@@ -10,7 +11,7 @@
 23 -1 -1
 51 -1 -1
  */
-#define DEBUG if(0)
+#define DEBUG if(1)
 #define MAX_QUEUE 10000
 typedef struct _node
 {
@@ -21,11 +22,16 @@ typedef struct _node
 	struct _node* right;
 }binaryTree;
 
+typedef struct node
+{
+    int item;
+    struct node* next;
+}NODE;
 typedef struct _queue
 {
     //fazer estrutura em queue para criar lista encadeada somente para qeue e que funcione para visited[i]
-    binaryTree* head;
-    binaryTree* tail;
+    NODE* head;
+    NODE* tail;
 }Queue;
 Queue* initQ()
 {
@@ -34,20 +40,11 @@ Queue* initQ()
     new_q->head = NULL;
     return new_q;
 }
-Queue* isEmptyQ(Queue* q)
+
+int isEmptyQ(Queue* q)
 {
-    return (q == NULL);
+    return (q->head == NULL);
 }
-// Queue* enQueue (Queue* q, binaryTree* bt)
-// {
-//     binaryTree* newQ = (binaryTree*) malloc (sizeof(binaryTree));
-//     newQ ->
-//     if (isEmptyQ(q))
-//     {
-//         newQ->
-//     }
-    
-// }
 int max (int a, int b)
 {
     return (a>b) ? a : b;
@@ -59,34 +56,62 @@ int height (binaryTree* bt)
     return 1 + max(height(bt->left),height(bt->right));
     }
 }
+NODE* createNode(int origin) //creates a "node" with value
+{
+    NODE* adj = (NODE*) malloc (sizeof(NODE));
+    adj->item = origin;
+    adj->next = NULL;
+    return adj;
+}
+int isEmptyList(NODE *head)
+{
+    return (head == NULL);
+}
+void printLinkedList(NODE *head)
+{
+    NODE* tmp = head;
+    if(tmp == NULL) printf(" hea d=== null\t");
+    while (tmp != NULL)
+    {
+        printf("[%d]-> ", tmp->item);
+        tmp = tmp->next;
+    }
+    DEBUG printf(" fim da lista.\n");
+    return;  
+}
+NODE* addNode (NODE* head, int value)
+{   NODE* new = createNode(value);
+    if(head == NULL) 
+    {
+        head = new;
+        //printf("new creado [%d]\n",new->item);
+    }
+    else 
+    {
+        NODE* tmp = head;
+        new->next = tmp;
+        head = new;
+    }
+    return head;
+}
 int isEmpty(binaryTree* bt)
 {
 	return (bt == NULL);
 }
-void preOrder(binaryTree* bt, int heights[][2], int* count)
+void preOrder(binaryTree* bt, NODE* height[])
 {
     if (!(isEmpty(bt)))
     {
         int level = bt->height;
         int vall = bt->value;
         int tmp;
-        printf(" ( %d[%d] ",bt->value,bt->height);
-        if(vall > heights[level][1]) //maior do que o maior
-        {
-            heights[level][0] = vall;
-            printf("{h[%d][0] = %d}\n",level,vall);
-        }
-        else if (vall < heights[level][2]) //menor do que o menor
-        {
-            heights[level][1] = vall;
-            printf("{h[%d][1] = %d}\n",level,vall);
-
-        }
-        preOrder(bt->left,heights,count);
-        preOrder(bt->right,heights,count);
+        DEBUG printf("%d[%d]\t",bt->value,bt->height);
+        height[level] = addNode(height[level],vall);
+        DEBUG printLinkedList(height[level]);
+        preOrder(bt->left,height);
+        preOrder(bt->right,height);
+        //printf(")");
         //printf(") ");
-        //printf(") ");
-
     }
     else
     {
@@ -102,29 +127,51 @@ binaryTree* createBinTree(int nodeNum, int value)
     new->height = 0;
     return new; 
 }
-binaryTree* add(int nodeNum, int values[], int leftNumbers[], int rightNumbers[],binaryTree* bt) 
+binaryTree* add(int nodeNum, int values[], int leftNumbers[], int rightNumbers[],binaryTree* bt,int NumOfNodes) 
  {
-    printf("\n---------- nó de numero #%d ---------\n",nodeNum);
+    DEBUG printf("\n---------- nó de numero #%d ---------\n",nodeNum);
 	binaryTree* newNode;
-	if (nodeNum == -1)
+	if (nodeNum == -1 || nodeNum > NumOfNodes-1)
 	{
 		newNode = NULL;
 	}
-	else
+	else 
 	{
         if(nodeNum != -1)
         {
             newNode = createBinTree(nodeNum,values[nodeNum]);
-            printf("criado com sucesso nodeNum = [%d]\n", nodeNum);
+           DEBUG printf("criado com sucesso nodeNum = [%d]\n", nodeNum);
         }
-        printf("indo para left\n");
-		newNode->left = add(leftNumbers[nodeNum],values,leftNumbers,rightNumbers,newNode->left);
-        printf("indo para right\n");
-		newNode->right = add(rightNumbers[nodeNum],values,leftNumbers,rightNumbers,newNode->right);
+        DEBUG printf("indo para left\n");
+		newNode->left = add(leftNumbers[nodeNum],values,leftNumbers,rightNumbers,newNode->left,NumOfNodes);
+        DEBUG printf("indo para right\n");
+		newNode->right = add(rightNumbers[nodeNum],values,leftNumbers,rightNumbers,newNode->right,NumOfNodes);
 	    newNode->height = height(newNode);
     }
 	return newNode;
  }
+ int deQueue(Queue* q)
+{
+    int deQueued = q->head->item;
+    NODE* tmp = q->head->next;
+    free(q->head);
+    q->head = tmp;
+    return deQueued;
+}
+void enQueue(Queue* q, int origin)
+{
+    NODE* toBeQueued = createNode(origin);
+    if (isEmptyQ(q))
+    {
+        q->head = toBeQueued;
+        q->tail = toBeQueued;
+    }
+    else
+    {
+        q->tail->next = toBeQueued;
+        q->tail = toBeQueued;   
+    }
+}
 binaryTree* iniT(){return NULL;}
 binaryTree* heighter(binaryTree* root, int height, int max, int min)
 {
@@ -133,66 +180,28 @@ binaryTree* heighter(binaryTree* root, int height, int max, int min)
         printf("Nivel 1 : Maior = %d, Menor = %d", max, min);
     }
 }
-// void bfs(graph* graph,int origin, int destination, int count)
-// {
-//     for (int i = 0; i < MAX_SIZE; i++)
-//     {
-//         graph->visited[i] = 0;
-//     }
-    
-//     adj_list*  tmp = graph->vertices[origin];  
-//     Queue* Queue = initQ(); 
-//     int dequeued;
-//     graph->visited[origin] = 1;
-//     //DEBUG printf("\tgraph->visited[%d] = %d\n",origin,graph->visited[origin]);
-
-//     enQueue(Queue,origin);
-//     printf("Iniciando busca em largura a partir de %d\n",origin);
-//     int lasts[MAX_SIZE];
-//     int found = 0;
-//     while (!isEmptyQ(Queue))
-//     {
-//         //DEBUG printf("Fila não está vazia ainda.\n");
-//         dequeued = deQueue(Queue);
-//         tmp = graph->vertices[dequeued];
-//         while (tmp != NULL)
-//         {   
-//            // if (tmp->item < tmp->next->item && tmp->next != NULL)
-//             //{
-//                 //tmp = tmp->next;
-//                 /* code that orders the reading */
-//             //}
-            
-
-
-
-
-
-
-//             //DEBUG printf("Visitando [%d]\n",tmp->item);
-//             lasts[count] = tmp->item;
-//             if(tmp->item == destination)
-//             {
-//                 found = 1;
-//                 count++;
-//                 DEBUG printf("ENCONTRADO depois de %d passagens, ultimo foi [%d]\n",count,lasts[count-1]);
-//                 break;
-//             }
-//             printf("Iniciando busca em largura a partir de %d\n",tmp->item);
-//             if(!graph->visited[tmp->item])
-//             {
-//                // DEBUG printf("\tgraph->visited[%d] = %d\n",tmp->item,graph->visited[tmp->item]);
-//                 graph->visited[tmp->item] = 1;
-//                 enQueue(Queue,tmp->item);
-//             }
-//             tmp = tmp->next;
-//             count++;
-
-//         }
-//     }
-//     DEBUG printf("FIM DA BUSCA!\n");
-
-// }
+void altureiro(int level, NODE* list, int maxH)
+{
+    int trueLevel = maxH-level;
+    int max, min;
+        max = list->item;
+        min = list->item;
+        NODE* tmp = list;
+        while (tmp != NULL)
+        {
+            if (tmp->item > max)
+            {
+                max = tmp->item;
+            }
+            if (tmp->item < min)
+            {
+               min = tmp->item;
+            }
+            tmp = tmp->next;
+        }
+    printf("Nivel %d: Maior = %d, Menor = %d\n",trueLevel,max,min);
+ 
+}
 int main()
  {
 	int numberOfNodes;
@@ -208,20 +217,19 @@ int main()
 	}
 	//every index will be associated with a node. it'll be the node number.
 	binaryTree* bT = iniT();
-	bT = add(0,nodeValue,leftNodeNumber,rightNodeNumber,bT);
+	bT = add(0,nodeValue,leftNodeNumber,rightNodeNumber,bT,numberOfNodes);
     int count = 0;
-	int heights[height(bT)+1][2];//heights[nivel] = {max,min};
-	preOrder(bT,heights,&count);
-    for (int i = 0; i < height(bT)+1; i++)
+    int max_h = height(bT)+1;
+    NODE* new[max_h];
+    for (int i = 0; i < max_h; i++)
     {
-        for (int j = 0; j < 2; j++)
-        {
-            printf("h[%d][%d] = [%d]\n",i,j,heights[i][j]);
-        }
-        
+        new[i] = NULL;
     }
-    
-    printf("\n");
-	//searcher(bT);
+	preOrder(bT,new);
+    for (int i = max_h-1; i>= 0; i--)
+    {
+        DEBUG printf("indo para o nivel [%d]\n",i);
+        altureiro(i,new[i],max_h);//passo o nível, passo os valores dos nós do nivel i
+    }
 	return 0;
  }

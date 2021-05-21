@@ -1,4 +1,4 @@
-//https://thehuxley.com/problem/546?quizId=6236
+//https://www.thehuxley.com/problem/547
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,35 +59,35 @@ int isEmpty(binaryTree* bt)
 {
     return (bt == NULL);
 }
-void preOrder(binaryTree* bt,int num[], int *count, char out[])
-{   
-    char buffer[30];
-    if (!(isEmpty(bt)))
-    {
-        //sprintf gets what would be printed 
-        int n = sprintf(buffer, "(%d", bt->data);
-        strcat(out,buffer);
-        //adds bt->data to num[]
+// void preOrder(binaryTree* bt,int num[], int *count, char out[])
+// {   
+//     char buffer[30];
+//     if (!(isEmpty(bt)))
+//     {
+//         //sprintf gets what would be printed 
+//         int n = sprintf(buffer, "(%d", bt->data);
+//         strcat(out,buffer);
+//         //adds bt->data to num[]
 
-        num[*count] = bt->data;
-        *count += 1;
+//         num[*count] = bt->data;
+//         *count += 1;
         
-        preOrder(bt->left,num,count,out);
-        preOrder(bt->right,num,count,out);
+//         preOrder(bt->left,num,count,out);
+//         preOrder(bt->right,num,count,out);
     
-        //cleans buffer and adds ) to out[]
-        memset(buffer,0,strlen(buffer));
-        sprintf(buffer,")");
-        strcat(out,buffer);
-        memset(buffer,0,strlen(buffer));
-    }
-    else
-    {
-        //cleans buffer and adds () to out[]
-        sprintf(buffer,"()");
-        strcat(out,buffer);
-    }  
-}
+//         //cleans buffer and adds ) to out[]
+//         memset(buffer,0,strlen(buffer));
+//         sprintf(buffer,")");
+//         strcat(out,buffer);
+//         memset(buffer,0,strlen(buffer));
+//     }
+//     else
+//     {
+//         //cleans buffer and adds () to out[]
+//         sprintf(buffer,"()");
+//         strcat(out,buffer);
+//     }  
+// }
 binaryTree* search(binaryTree* root, int target)
 {
     if (root == NULL || root->data == target)
@@ -145,12 +145,12 @@ int main()
         i++;
     }
 
-    //gets an array formed by the rightTree in the preOrder variation
-    int rightTree[10000];                   //its the tree! (the right one :D in the int format)
-    int ptr2 = 0;                           //auxiliary pointer to initialize preOrder
-    char output[10000];                     //its the tree! (the right one :D in the char format)
-    preOrder(bT,rightTree,&ptr2,output);
-    DEBUG printf("[%s]\n",output);
+    // //gets an array formed by the rightTree in the preOrder variation
+    // int rightTree[10000];                   //its the tree! (the right one :D in the int format)
+    // int ptr2 = 0;                           //auxiliary pointer to initialize preOrder
+    // char output[10000];                     //its the tree! (the right one :D in the char format)
+    // preOrder(bT,rightTree,&ptr2,output);
+    // DEBUG printf("[%s]\n",output);
     
     binaryTree* targetFound = search(bT,numberToBeFound);
     if(targetFound == NULL) printf("NAO ESTA NA ARVORE\n-1\n");
