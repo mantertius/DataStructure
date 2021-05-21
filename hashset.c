@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
+
 #define true 1
 #define false 0
-#define DEBUG if(1)
+#define DEBUG if(0)
 #define MAX_SIZE 10000
 /*
 1. ADD(S, k) = adiciona o int k ao conjunto S, retornando True se o int foi corretamente adicionado ou false se o int já pertencia ao conjunto.
@@ -40,7 +42,7 @@ list* initList()
     new_list->size = 0;
     return new_list;
 }
-table* initTable()
+table* initTable(int base)
 {
     table* newTable = (table*) malloc(sizeof(table));
     for (int i = 0; i < 100; i++)
@@ -48,7 +50,7 @@ table* initTable()
         newTable->tables[i] = initList();
         newTable->numOfData[i] = 0;
     }
-    newTable->base = 7;
+    newTable->base = base;
     return newTable;
 }
 bool addListHead(list* lista, int value)
@@ -60,39 +62,69 @@ bool addListHead(list* lista, int value)
         lista->head = new_node;
         lista->tail = new_node;
         lista->size++;
-        return;
+        return true;
     }
     new_node->next = lista->head;
     lista->head = new_node;
     lista->size++;
+    return true;
 }
 bool addHashed(table* ht, int value, int key)
 {
     return addListHead(ht->tables[key],value);
 }
-bool ADD(table* S, int K, int key
-)
+bool DEL(table* S, int K,int key,int* comparCount)//remove
 {
-    if (!HAS(S,K))
-    {
-        addHashed(S,K,)
-        return true;
-    }
-bool DEL(table* S, int K)//remove
-{
-    return true;
-}
-bool HAS(table* S, int K)//percente
-{
-    int key = hashFunction(K,S->base);
+    //DEBUG printf("deletando [%d]\t",K);
     node* tmp = S->tables[key]->head; 
-    while (S->tables[key] != NULL)
+    while (tmp != NULL)
     {
-        if(tmp->data == K)return true;
+        if(tmp->data == K){*comparCount += 1;return true;}
         tmp = tmp->next;
-    
+        *comparCount += 1;
     }
     return false;
+}
+bool HAS(table* S, int K, int* comparCount)//percente
+{
+    //DEBUG printf("\ncheguei em HAS! \n");
+    int voltas = 0;
+    int key = hashFunction(K,S->base);
+    DEBUG printf("cheguei na chave [%d],base = [%d], k = [%d]\n",key,S->base,K);
+    node* tmp = S->tables[key]->head; 
+    //if (tmp == NULL) DEBUG printf("CABEÇA NULA!\n");
+    while (tmp != NULL)
+    {
+        //DEBUG printf("oi\n");
+        if(tmp->data == K)
+        {
+            *comparCount += 1;
+            voltas++;
+            DEBUG printf("voltinhas [%d]\n",voltas);
+            return true;
+        }
+        *comparCount += 1;
+        voltas++;
+        //DEBUG printf("comparCount = [%d], voltas= [%d]\n",*comparCount,voltas);
+        tmp = tmp->next;
+    }
+    return false;
+}
+bool ADD(table* S, int K, int key, int* comparCount)
+{
+    int ptr = 0;
+    if (!HAS(S,K, &ptr))
+    {
+        DEBUG printf("======================= ADICIONANDO ->\t chave[%d],base = [%d], k = [%d]\n",key,S->base,K);
+        addHashed(S,K,key);
+        *comparCount = ptr;
+        return true;
+    }
+    else
+    {
+        *comparCount = ptr;
+        return false;
+    }
 }
 int AtoI(char input[]) //returns an int from a string
 {
@@ -102,7 +134,7 @@ int AtoI(char input[]) //returns an int from a string
     while (*ptr) { 
         if (isdigit(*ptr)) {                        //if string + x is digit 
             long val = strtol(ptr, &ptr, 10);       //transforms the characters from string into base10 ints. 
-            DEBUG printf("%ld\n", val);
+            //DEBUG printf("%ld\n", val);
             ans = val;
         } else { 
             ptr++; 
@@ -110,44 +142,112 @@ int AtoI(char input[]) //returns an int from a string
     }
     return ans;
 }
+int biggest(table* ht)
+{
+    int max = 0;
+    for (int i = 0; i < 100; i++)
+    {
+        if(ht->numOfData[i]> max) max = ht->numOfData[i];
+    }
+}
+table* rehash(table* ht, int numCount)
+{
+    int ptr = 0;
+    int new_base = 2*(ht->base)-1;
+    table* new_table  = initTable(new_base);
+    if (numCount/ht->base >= 0.75)
+    {
+        DEBUG printf("%d/%d = %d\n",numCount,ht->base,numCount/ht->base);
+        DEBUG printf("\n!!!!REHASH?!?!?!?\n");
+        for (int i = 0; i < ht->base; i++)
+        {
+            node* tmp = ht->tables[i]->head;
+            while (tmp != NULL)
+            {
+                int oldkey, value, newkey;
+                oldkey = i;
+                value = tmp->data;
+                DEBUG printf("fazendo rehash de [%d]\t",value);
+                newkey = hashFunction(value,new_base);
+                ADD(new_table,value,newkey,&ptr);
+                tmp = tmp->next;
+            }      
+        }
+        free(ht);
+        return new_table;
+    }
+    else
+    {
+        return ht;
+    }
+    
+    
+}
 int main()
 {
-    int count = 0;
+    int stepCount = 0;
+    int numCount = 0;
     int base = 7;
     int key;
+    int res;
+    int lenghtOfTable = 7;
     char input[300];
-    table* ht  = initTable();
+    int comparCount = 0;
+    table* ht  = initTable(base);
     while (gets(input))
     {
-        int buffer;
+        long buffer;
         switch (input[2])
         {
         case 'D'://add
-            //DEBUG printf("[%s]\n",input);
             buffer = AtoI(input);
-            //ADD(ht,buffer);
             key = hashFunction(buffer,base);
-            addHashed(ht,buffer,key);
-            //rehash?
+            comparCount = 0;
+            //DEBUG printf("ADICIONANDO [%d]\n",buffer);
+            res = ADD(ht,buffer,key,&comparCount);  
+            numCount++;
+            ht = rehash(ht,numCount);
+            //DEBUG printf("PASSOU! -: [%s]\n",input);
+            printf("%d ",stepCount);
+            printf("%d ",res);
+            printf("%d\n",comparCount);
             break;
 
         case 'S'://has
             buffer = AtoI(input);
             key = hashFunction(buffer,base);
-            HAS(ht,buffer);
+            comparCount = 0;
+            res = HAS(ht,buffer,&comparCount);
+            printf("%d ",stepCount);
+            //DEBUG printf("HAS [%d] ",buffer);
+            printf("%d ",res);
+            printf("%d\n",comparCount);
             break;
+
+
         case 'L'://del
             buffer = AtoI(input);
             key = hashFunction(buffer,base);
-
-            DEL(ht, buffer);
+            comparCount = 0;
+            //DEBUG printf("DELETANDO [%d],key[%d]\n",buffer,key);
+            res = DEL(ht,buffer,key,&comparCount);
+            printf("%d ",stepCount);
+            printf("%d ",res);
+            printf("%d\n",comparCount);
+            numCount--;
             break;
+
+
         case 'T'://prt
-            DEBUG printf("PRT");
+            //DEBUG printf("PRT");
+            printf("%d ",stepCount);
+            printf("%d ",ht->base);
+            printf("%d ",numCount);
+            printf("%d\n",biggest(ht));
             break;
         }
         memset(input,0,strlen(input));
-        count++;
+        stepCount++;
     }
     
     
@@ -255,3 +355,7 @@ HAS 50
 HAS 71
 PRT
 */
+
+
+
+//TODO quando chega na linha 13, e na linha 15, parece que nao há adição de 59
